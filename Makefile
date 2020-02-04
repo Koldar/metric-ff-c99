@@ -70,7 +70,7 @@ SOURCES_FILENAME = \
 	inst_easy.c \
 	inst_hard.c \
 	inst_final.c \
-	orderings.c \
+	expressions.c \
 	relax.c \
 	search.c \
 	times.c \
