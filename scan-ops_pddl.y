@@ -32,6 +32,7 @@
 #include "ff.h"
 #include "memory.h"
 #include "parse.h"
+#include "lex-ops_pddl.h"
 
 
 #ifndef SCAN_ERR
@@ -90,8 +91,10 @@ static char *serrmsg[] = {
   NULL
 };
 
-
-/* void opserr( int errno, char *par ); */
+void opserr( int errno, char *par );
+int yyerror( char *msg );
+void load_ops_file( char *filename );
+int supported( char *str );
 
 
 static int sact_err;
@@ -368,7 +371,7 @@ NAME
 { 
   if ( !supported( $4 ) ) {
     opserr( NOT_SUPPORTED, $4 );
-    yyerror();
+    yyerror($4);
   }
 }
 require_key_star  CLOSE_PAREN
@@ -383,7 +386,7 @@ NAME
 { 
   if ( !supported( $1 ) ) {
     opserr( NOT_SUPPORTED, $1 );
-    yyerror();
+    yyerror($1);
   }
 }
 require_key_star
@@ -983,8 +986,6 @@ VARIABLE  typed_list_variable        /* a list element (gets type from next one)
 
 
 %%
-#include "lex.ops_pddl.c"
-
 
 /**********************************************************************
  * Functions
@@ -1020,7 +1021,7 @@ int yyerror( char *msg )
 
   fflush(stdout);
   fprintf(stderr, "\n%s: syntax error in line %d, '%s':\n", 
-	  gact_filename, lineno, yytext);
+	  gact_filename, lineno, ops_pddltext);
 
   if ( NULL != sact_err_par ) {
     fprintf(stderr, "%s %s\n", serrmsg[sact_err], sact_err_par);
@@ -1051,7 +1052,7 @@ void load_ops_file( char *filename )
 
   gact_filename = filename;
   lineno = 1; 
-  yyin = fp;
+  ops_pddlin = fp;
 
   yyparse();
 

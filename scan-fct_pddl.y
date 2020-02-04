@@ -32,6 +32,7 @@
 #include "ff.h"
 #include "memory.h"
 #include "parse.h"
+#include "lex-fct_pddl.h"
 
 
 #ifndef SCAN_ERR
@@ -97,6 +98,11 @@ static char * serrmsg[] = {
   NULL
 };
 
+
+// functions declarations
+void fcterr( int errno, char *par );
+int yyerror( char *msg );
+void load_fct_file( char *filename);
 
 /* void fcterr( int errno, char *par ); */
 
@@ -218,7 +224,7 @@ OPEN_PAREN  BDOMAIN_TOK  NAME  CLOSE_PAREN
 { 
   if ( SAME != strcmp($3, gdomain_name) ) {
     fcterr( BADDOMAIN, NULL );
-    yyerror();
+    yyerror($3);
   }
 }
 ;
@@ -863,8 +869,7 @@ NAME  name_star
 
 %%
 
-
-#include "lex.fct_pddl.c"
+//#include "lex-fct_pddl.c"
 
 
 /**********************************************************************
@@ -898,7 +903,7 @@ int yyerror( char *msg )
 {
   fflush( stdout );
   fprintf(stderr,"\n%s: syntax error in line %d, '%s':\n", 
-	  gact_filename, lineno, yytext );
+	  gact_filename, lineno, fct_pddltext );
 
   if ( sact_err_par ) {
     fprintf(stderr, "%s%s\n", serrmsg[sact_err], sact_err_par );
@@ -929,7 +934,7 @@ void load_fct_file( char *filename )
 
   gact_filename = filename;
   lineno = 1; 
-  yyin = fp;
+  fct_pddlin = fp;
 
   yyparse();
 

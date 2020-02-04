@@ -23,6 +23,7 @@
 %{
 #include "ff.h"
 #include "parse.h"
+#include "scan-ops_pddl.h"
 
 /* default yywrap function - always treat EOF as an EOF  */
 int ops_pddlwrap() { return 1; }; 
@@ -135,13 +136,13 @@ z [Zz]
 {d}{e}{c}{r}{e}{a}{s}{e} { return(DECREASE_TOK); }
 
 
-:?[a-zA-Z][a-zA-Z0-9\-_]* { strupcase(yytext); strcpy(yylval.string, yytext); 
+:?[a-zA-Z][a-zA-Z0-9\-_]* { strupcase(ops_pddltext); strcpy(ops_pddllval.string, ops_pddltext); 
  return(NAME); }
 
-\?[a-zA-Z][a-zA-Z0-9\-_\[\]]* { strupcase(yytext); strcpy(yylval.string, yytext); 
+\?[a-zA-Z][a-zA-Z0-9\-_\[\]]* { strupcase(ops_pddltext); strcpy(ops_pddllval.string, ops_pddltext); 
  return(VARIABLE); }
 
-"-"?[0-9]*[.]?[0-9]* { strcpy(yylval.string, yytext); return(NUM);}
+"-"?[0-9]*[.]?[0-9]* { strcpy(ops_pddllval.string, ops_pddltext); return(NUM);}
 
 
 "-"[ \t]*"("[ \t]*{e}{i}{t}{h}{e}{r} { return(EITHER_TOK); }
