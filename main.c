@@ -609,7 +609,8 @@ void load_fct_file( char *filename );
 
 
 
-struct tms lstart, lend;
+struct abstract_time* lstart = NULL;
+struct abstract_time* lend = NULL;
 
 
 
@@ -627,11 +628,12 @@ int main( int argc, char *argv[] )
    */
   char fct_file[MAX_LENGTH] = "";
   
-  struct tms start, end;
+  struct abstract_time* start = NULL;
+  struct abstract_time* end = NULL;
 
   Bool found_plan;
 
-  times ( &lstart );
+  lstart = getCurrentTime();
 
   /* command line treatment
    */
@@ -668,7 +670,7 @@ int main( int argc, char *argv[] )
 
   /* start parse & instantiation timing
    */
-  times( &start );
+  start = getCurrentTime();
   /* domain file (ops)
    */
   if ( gcmd_line.display_info >= 1 ) {
@@ -751,42 +753,50 @@ int main( int argc, char *argv[] )
   build_easy_action_templates();
   build_hard_action_templates();
 
-  times( &end );
-  TIME( gtempl_time );
+  end = getCurrentTime();
+  gtempl_time = getSecondsElapsed(start, end);
+  freeAbstractTime(start);
+  freeAbstractTime(end);
 
-  times( &start );
+  start = getCurrentTime();
 
   /* perform reachability analysis in terms of relaxed 
    * fixpoint
    */
   perform_reachability_analysis();
 
-  times( &end );
-  TIME( greach_time );
+  end = getCurrentTime();
+  greach_time = getSecondsElapsed(start, end);
+  freeAbstractTime(start);
+  freeAbstractTime(end);
 
-  times( &start );
+  start = getCurrentTime();
 
   /* collect the relevant facts and build final domain
    * and problem representations.
    */
   collect_relevant_facts_and_fluents();
 
-  times( &end );
-  TIME( grelev_time );
+  end = getCurrentTime();
+  grelev_time = getSecondsElapsed(start, end);
+  freeAbstractTime(start);
+  freeAbstractTime(end);
 
 
   /* now transform problem to additive normal form,
    * if possible
    */
-  times( &start );
+  start = getCurrentTime();
   if ( !transform_to_LNF() ) {
     printf("\n\nThis is not a linear task!\n\n");
     exit( 1 );
   }
-  times( &end );
-  TIME( gLNF_time );
-  
-  times( &start );
+  end = getCurrentTime();
+  gLNF_time = getSecondsElapsed(start, end);
+  freeAbstractTime(start);
+  freeAbstractTime(end);
+
+  start = getCurrentTime();
 
   /* now build globally accessable connectivity graph
    */
@@ -799,8 +809,8 @@ int main( int argc, char *argv[] )
    */
   determine_fl_relevance();
 
-  times( &end );
-  TIME( gconn_time );
+  end = getCurrentTime();
+  gconn_time = getSecondsElapsed(start, end);
 
   /***********************************************************
    * we are finally through with preprocessing and can worry *
@@ -821,7 +831,8 @@ int main( int argc, char *argv[] )
     }
   }
 
-  times( &start );
+  freeAbstractTime(start);
+  start = getCurrentTime();
 
   if ( gcmd_line.ehc ) {
     found_plan = do_enforced_hill_climbing();
@@ -835,8 +846,9 @@ int main( int argc, char *argv[] )
     found_plan = do_best_first_search();
   }
 
-  times( &end );
-  TIME( gsearch_time );
+  freeAbstractTime(end);
+  end = getCurrentTime();
+  gsearch_time = getSecondsElapsed(start, end);
 
   if ( found_plan ) {
     print_plan();
@@ -846,6 +858,10 @@ int main( int argc, char *argv[] )
   output_planner_info();
 
   printf("\n\n");
+
+  freeAbstractTime(start);
+  freeAbstractTime(end);
+
   exit( 0 );
 
 }
