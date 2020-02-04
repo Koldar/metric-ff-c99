@@ -34,7 +34,7 @@ BISON_FLAGS =
 LIBS    = -lm
 
 ifeq ($(OS),Windows_NT)
-	CFLAGS := $(CFLAGS) -DWINDOWS -Dfileno=_fileno -Disatty=_isatty -Dlineno=_lineno
+	CFLAGS := $(CFLAGS) -DWINDOWS -D_CRT_SECURE_NO_WARNINGS -Dfileno=_fileno -Disatty=_isatty -Dlineno=_lineno
 	FLEX_FLAGS := $(FLEX_FLAGS) --nounistd
 	BISON_FLAGS := $(BISON_FLAGS)
 	OUTPUTNAME := ff.exe
