@@ -34,8 +34,12 @@ BISON_FLAGS =
 LIBS    = -lm
 
 ifeq ($(OS),Windows_NT)
-	CFLAGS := $(CFLAGS) -DWINDOWS -D_CRT_SECURE_NO_WARNINGS -Dfileno=_fileno -Disatty=_isatty -Dlineno=_lineno
-	FLEX_FLAGS := $(FLEX_FLAGS) --nounistd
+	CFLAGS := $(CFLAGS) -DWINDOWS -D_CRT_SECURE_NO_WARNINGS -DYY_NO_UNISTD_H -D_CRT_NONSTDC_NO_WARNINGS
+	# -DWINDOWS we're compiling in windows
+	# -D_CRT_SECURE_NO_WARNINGS some warning needs to be disabled for windows to compile
+	# DYY_NO_UNISTD_H flex compiled by including unistd, which is not present in windows. We need to avoid importing such library
+	# -Dfileno=flex uses fileno, but for windows it is deprecated. Use this to silence such deprecation error
+	FLEX_FLAGS := $(FLEX_FLAGS)
 	BISON_FLAGS := $(BISON_FLAGS)
 	OUTPUTNAME := ff.exe
 else
