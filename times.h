@@ -13,7 +13,7 @@ struct abstract_time;
 */
 struct abstract_time* getCurrentTime();
 
-freeAbstractTime(const struct abstract_time* t);
+void freeAbstractTime(const struct abstract_time* t);
 
 double getSecondsElapsed(const struct abstract_time* start, const struct abstract_time* end);
 

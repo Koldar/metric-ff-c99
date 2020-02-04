@@ -63,7 +63,7 @@
 		return NULL;
 	}
 
-	freeAbstractTime(const struct abstract_time* t) {
+	void freeAbstractTime(const struct abstract_time* t) {
 		if (t != NULL) {
 			free((struct abstract_time*)t);
 		}
