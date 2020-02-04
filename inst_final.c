@@ -73,6 +73,8 @@
 #include "inst_pre.h"
 #include "inst_final.h"
 
+#include "random.h"
+
 
 
 
