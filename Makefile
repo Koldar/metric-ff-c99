@@ -87,7 +87,7 @@ OBJECTS_FILENAME = $(SOURCES_FILENAME:.c=.o)
 
 .DEFAULT_GOAL := all
 
-.phony: all clean veryclean makedirs info lint
+.phony: all clean veryclean makedirs info lint copy-resources
 
 all: info makedirs $(OUTPUTNAME)
 	@echo "ALL WORK HAS BEEN DONE! :D"
@@ -99,6 +99,9 @@ info:
 makedirs:
 	@mkdir -pv $(OUTPUT_DIR)$(GENERATED_HEADERS)
 	@mkdir -pv $(OUTPUT_DIR)$(GENERATED_SOURCES)
+
+copy-resources:
+	@cp -v pddl/* $(OUTPUT_DIR)
 
 # .SUFFIXES:
 # .SUFFIXES: .c .o
@@ -113,7 +116,7 @@ makedirs:
 	@echo "Compiling file $@..." 
 	cd $(OUTPUT_DIR) && $(CC) -c $(CFLAGS) -o $@ $(SOURCE_DIR)$<
 
-$(OUTPUTNAME): makedirs $(OBJECTS_FILENAME) $(PDDL_PARSER_OBJ_FILENAME)
+$(OUTPUTNAME): makedirs $(OBJECTS_FILENAME) $(PDDL_PARSER_OBJ_FILENAME) copy-resources
 	@echo "Compiling $(OUTPUTNAME)"
 	cd $(OUTPUT_DIR) && $(CC) -o $(OUTPUTNAME) $(OBJECTS_FILENAME) $(PDDL_PARSER_OBJ_FILENAME) $(CFLAGS) $(LIBS)
 
