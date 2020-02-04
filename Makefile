@@ -43,7 +43,7 @@ ifeq ($(OS),Windows_NT)
 	BISON_FLAGS := $(BISON_FLAGS)
 	OUTPUTNAME := ff.exe
 else
-	CFLAGS := $(CFLAGS) -DLINUX -D_POSIX_SOURCE
+	CFLAGS := $(CFLAGS) -DLINUX -D_POSIX_SOURCE=200809L
 	# -DLINUX our custom macro to make the code aware we're buildin on linux
 	# -D_POSIX_SOURCE: lineno is present in stdio
 	FLEX_FLAGS := $(FLEX_FLAGS)
