@@ -1987,4 +1987,4 @@ extern Bool gconditional_effects;
 
 
 
-#endif __FF_H
+#endif /* __FF_H */
