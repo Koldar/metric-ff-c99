@@ -1,7 +1,7 @@
 Introduction
 ============
 
-This repository contains Fast Forward code, made compliant with modern c99 compilers.
+This repository contains Metric Fast Forward code, made compliant with modern c99 compilers.
 No changes have been made into the planner whatsoever.
 
 I'm not the author of the planner itself. see the planner homepage https://fai.cs.uni-saarland.de/hoffmann/ff.html for further information. Use this porting at your own discretion.
