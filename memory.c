@@ -56,7 +56,7 @@
 
 
 
-
+#include <string.h>
 
 #include "ff.h"
 #include "memory.h"

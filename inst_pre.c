@@ -73,7 +73,7 @@
 
 
 
-
+#include <string.h>
 
 #include "ff.h"
 
